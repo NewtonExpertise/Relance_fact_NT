@@ -1,0 +1,96 @@
+{% extends "template/template_ppl_mail.html" %}
+
+
+{% block content %}
+
+        <p style="width: 50px; font-family:Calibri;">
+            <p style="text-align : justify ; ">Madame, Monsieur,</p>
+
+            <p style="text-align : justify ; ">Veuillez trouver ci-dessous un relevé correspondant aux factures restant à
+                nous régler à ce jour :</p>
+            <fieldset style="border-radius:8px; border: thick double; border-color: #F6A737;">
+                <legend style="padding:5px; text-align:center"><strong style='text-align:center;'>Relevé de compte
+                        N°{{compte_client}}</strong></legend>
+                <table style="border-collapse: collapse;margin:auto"  style="border-radius:8px; border: thick double; border-color: #F6A737;" >
+                
+                    <thead style="background-color: #F6A737">
+                        <tr>
+                            <th style="text-align: left; padding:2px; padding-left: 20px; padding-right: 40px;">Relance</th>
+
+                            <th style="text-align: left; padding:2px; padding-left: 20px; padding-right: 40px;">Date facture</th>
+
+                            <th style="text-align: left; padding:2px; padding-left: 20px; padding-right: 40px;">N°d'opération</th>
+
+                            <th style="text-align: left; padding:2px; padding-left: 20px; padding-right: 40px;">Echéance</th>
+
+                            <th style="text-align: left; padding:2px; padding-left: 20px; padding-right: 40px;">Montant</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+
+
+                        {% for data in data_tableau %}
+                        <tr>
+                            <td style="text-align: center; padding:2px; padding-left: 20px; padding-right: 40px;">{{data['niveau_relance']}}
+                            </td>
+                            <td style="text-align: left; padding:2px; padding-left: 20px; padding-right: 40px;">{{data['date_fact']}}
+                            </td>
+                
+                            <td style="text-align: left; padding:2px; padding-left: 20px; padding-right: 40px;">{{data['num_fact']}}
+                            </td>
+                
+                            <td style="text-align: left; padding:2px; padding-left: 20px; padding-right: 40px;">{{data['echeance']}}
+                            </td>
+                
+                            <td style="text-align: right; padding:2px; padding-left: 20px; padding-right: 40px;">{{data['montantDebit']}}
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th style="text-align: left; padding:2px; padding-left: 20px; padding-right: 40px;">
+                            </th>
+
+                            <th style="text-align: left; padding:2px; padding-left: 20px; padding-right: 40px;">
+                            </th>
+                        
+                            
+                            
+
+                            <th style="text-align: center; padding:2px; padding-left: 20px; padding-right: 40px;  background-color:#F6A737;" colspan="2">Total
+                                relance :
+                            </th>
+
+                            <th
+                                style="text-align: right; padding:2px; padding-left: 20px; padding-right: 40px;  background-color:#F6A737;">
+                                {{total_relance}}
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+                
+            </fieldset>
+            <br>
+            <p style="text-align : justify ; ">Nous vous remercions de bien vouloir nous faire parvenir les règlements correspondants.</p>
+
+            <p><strong>Newton {{entity}} : </strong><br>
+                <strong>CREDIT DU NORD ROUEN-VOLTAIRE</strong><br>
+                <strong>IBAN :</strong> {{IBAN}}<br>
+                <strong>BIC :</strong> {{BIC}}</p>
+            <p style="text-align : justify ; ">Si votre règlement a croisé notre courrier veuillez ne pas tenir compte de ce
+                dernier.</p>
+            <p style="text-align : justify ; ">En l'attente de votre règlement, nous vous prions d'agréer, Madame, Monsieur,
+                l'expression de nos
+                salutations respectueuses.</p>
+            Cordialement.<br>
+            <p style="color : rgb(197, 118, 0);"><strong>LE SERVICE COMPTABILITE</strong></p>
+
+            {% endblock %}
+
