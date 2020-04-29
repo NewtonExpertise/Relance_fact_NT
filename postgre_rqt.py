@@ -8,12 +8,11 @@ def InfoInsertPJDBPostgre(collab, horodata, dossier, compte, document, nomref):
     data = [collab, horodata, dossier, compte, document, nomref]
     return sql, data
 
-def espion_postgre(collab, horodata, dossier, base, args):
+def espion_postgre(collab, horodata, base, nb_mails, nb_factures):
 
-    argument = ";".join(args)
     sql = f"""
-    INSERT INTO espion (collab, horodat, dossier, base, args)
-    VALUES ('{collab}','{horodata}','{dossier}','{base}','{argument}')
+    INSERT INTO relance_client(collab, horodat, base, nb_mails, nb_factures)
+    VALUES ('{collab}','{horodata}', '{base}','{nb_mails}', '{nb_factures}')
     """
     return sql
 

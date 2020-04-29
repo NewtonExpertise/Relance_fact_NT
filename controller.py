@@ -211,8 +211,8 @@ class Controler_relance_client():
 
         try:
             with BDDPostgreSQL() as PGSQL:
-                args_postgre=['Relance_client', f'mail:{relance}', f'factures:{factures}']
-                sql = espion_postgre(getlogin(), datetime.now().strftime('%Y-%m-%d %H:%M:%S'), path.basename(path.dirname(self.active_BDD_Newton)),'DC', args_postgre)
+                
+                sql = espion_postgre(getlogin(), datetime.now().strftime('%Y-%m-%d %H:%M:%S'), path.basename(path.dirname(self.active_BDD_Newton)),relance,factures )
                 PGSQL.execute(sql)
         except:
             pass

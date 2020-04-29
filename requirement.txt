@@ -1,0 +1,7 @@
+comtypes==1.1.7
+Jinja2==2.11.2
+MarkupSafe==1.1.1
+psycopg2==2.8.5
+pyodbc==4.0.30
+pywin32==227
+xlwings==0.18.0
