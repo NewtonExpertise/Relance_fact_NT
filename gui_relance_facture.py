@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter.ttk import *
 from tkinter import messagebox
 from os import system
+import webbrowser as wb
 
 class Gui_relance_client():
     def __init__(self):
@@ -53,7 +54,7 @@ class Gui_relance_client():
         self.envoie_mail = Button(self.window, text="Envoyer les relances", image = self.Logo_envoi_mail, compound = LEFT)
         self.envoie_mail.place(x=233 , y=426)
 
-        self.xl_fact_relance =Button(self.window, text="Liste factures a relancer", image = self.logo_excel, compound = LEFT )
+        self.xl_fact_relance =Button(self.window, text="Liste factures à relancer", image = self.logo_excel, compound = LEFT )
         self.xl_fact_relance.place(x=96 , y=554, width = 200)
 
         self.xl_all_dest =Button(self.window, text="Liste destinataires relances", image = self.logo_excel, compound = LEFT)
@@ -75,7 +76,7 @@ class Gui_relance_client():
         lb_relance_ok = Label(self.window, text="Liste d'envoi :",style='BW.TLabel', justify= LEFT)
         lb_relance_ok.place(x=15 , y=51)
 
-        lb_relance_annulee = Label(self.window, text="Liste d'envoi annulée :",style='BW.TLabel', justify= LEFT)
+        lb_relance_annulee = Label(self.window, text="Liste d'envoi annulé :",style='BW.TLabel', justify= LEFT)
         lb_relance_annulee.place(x=355 , y=51)
 
         lb_relance_no_contact = Label(self.window, text='Destinataires relance à paramétrer \n dans Quadra GI :',style='BW.TLabel', justify= LEFT)
@@ -162,7 +163,7 @@ Voulez-vous quitter l'application ?""")
         self.window.mainloop()
         
     def help(self):
-        system('')
+        wb.open_new(r'.\doc\relanceclient.pdf')
 
 
 if __name__ == "__main__":

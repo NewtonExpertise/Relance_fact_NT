@@ -12,6 +12,7 @@ import time
 import sys
 
 
+
 class Controler_relance_client():
 
     def __init__(self, view):
@@ -29,8 +30,8 @@ class Controler_relance_client():
         self.NEWTON_BIC_EXPERTISE = 'NORDFRPP'
         self.template_basic_expertise = 'template/template_brut_expertise.txt'
         self.template_basic_audit = 'template/template_brut_audit.txt'
-        self.excel_expertise = "excel/Relance_clients_expertise.xlsx"
-        self.excel_audit = "excel/Relance_clients_audit.xlsx"
+        self.excel_expertise = "./excel/Relance_clients_expertise.xlsx"
+        self.excel_audit = "./excel/Relance_clients_audit.xlsx"
 
         # Variable a set au moment du choix de dossier
         self.NEWTON_ENTITY = ''
@@ -73,7 +74,7 @@ class Controler_relance_client():
             self.active_BDD_Newton = self.path_BDD_Expertise 
             self.active_PJ_NewTon = self.path_PJ_Expertise 
             self.template_basic = self.template_basic_expertise 
-            self.NEWTON_ENTITY = 'Expertise'
+            self.NEWTON_ENTITY = 'EXPERTISE'
             self.NEWTON_ACTIVE_IBAN = self.NEWTON_IBAN_EXPERTISE
             self.NEWTON_ACTIVE_BIC = self.NEWTON_BIC_EXPERTISE
             self.xlwings_wb =  self.excel_expertise
@@ -222,6 +223,7 @@ class Controler_relance_client():
         Set des variables de la classe mail pour envoie des relances sélectionné dans la liste "Liste relance prêtes"
         de l'IHM
         """
+        
         # compteur permettant un retour des envoies effectués à l'utilisateur
         nb_relance = 0
         nb_factures = 0
@@ -305,12 +307,12 @@ class Controler_relance_client():
                 # Set basic template : 
                 set_mail.render_basic_template(self.template_basic)
                 # Set de l'objet du mail
-                subject = data_relance['contact']['Email']
-
+                subject = "Relance"
+                
                 # Envoie Email, test si le processus est toujours accepté par l'utilisateur
                 if self.stop_process:
                     return nb_relance, nb_factures
-                set_mail.send_mail(subject,"mathieu.leroy@newtonexpertise.com","mathieu.leroy@newtonexpertise.com")
+                set_mail.send_mail(subject,data_relance['contact']['Email'])
                 nb_relance+= 1
 
                 # Maj de la progress bar tout les 0.3 sec.
@@ -393,11 +395,12 @@ class Controler_relance_client():
         # test etat processus
         if self.stop_process==0:
             self.stop_process=1
-        else:
-            if self.path_wb:
-                Outil_Excel(self.active_path_wb).save_and_close(self.path_wb)
+        
+            
         if boolean:
             self.fram.window.quit()
+            if self.path_wb:
+                Outil_Excel(self.active_path_wb).save_and_close(self.path_wb)
         
     def no_excel(self):
         """

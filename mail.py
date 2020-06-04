@@ -9,17 +9,28 @@ import mimetypes
 from email import encoders
 import os
 from jinja2 import Environment, FileSystemLoader, Template
+import smtplib
+import configparser as cp
 
 class mail():
     def __init__(self):
 
         self.msg = MIMEMultipart()
-        self.host = 'smtp.serinyatelecom.fr'
-        self.port = 25
+        # self.host = 'smtp.serinyatelecom.fr'
+        # self.port = 25
+        self.smtp = smtplib.SMTP_SSL('smtp.yaziba.net:465')
+        # récupère les log pour l'adressse mail de l'expéditeur
+        config = cp.RawConfigParser()
+        config.read("conf.ini",encoding="utf8")
+        self.mail_expediteur = config.get("logging", "mail")
+        mdp = config.get("logging", "mdp")
+        self.smtp.login(self.mail_expediteur, mdp)
+
 
     def render_basic_template(self, template_file):
         """
         Set un message basic pour les destinataires ne pouvant supporter le format HTML
+        Prend en argument un fichier txt.
         """
         loader = FileSystemLoader('.')
         env = Environment(loader=loader)
@@ -59,7 +70,7 @@ class mail():
         img.add_header('Content-Disposition', 'attachment', filename=id_img)
         self.msg.attach(img)
 
-    def send_mail(self, objet, expediteur, destinataire, cc=None, bcc=None):
+    def send_mail(self, objet,  destinataire, cc=None, bcc=None):
         """
         envoie l'email.
         """
@@ -76,28 +87,27 @@ class mail():
         # except:
         #     pass
 
-        if type(destinataire) is not list:
-            destinataire = destinataire.split()
+        # if type(destinataire) is not list:
+        #     destinataire = destinataire.split()
 
-        destinataires_list = destinataire + [cc] + [bcc]
-        destinataires_list = list(filter(None, destinataires_list)) # remove null emails
-        print(destinataires_list)
-        print(expediteur)
-        self.msg['From'] = expediteur
+        # destinataires_list = destinataire + [cc] + [bcc]
+        # destinataires_list = list(filter(None, destinataires_list)) # remove null emails
+        # self.msg['From'] = expediteur
         self.msg['Subject'] = objet
-        self.msg['To']= ', '.join(destinataires_list)
-        self.msg['Cc']      = cc
-        self.msg['Bcc']     = bcc
-        mailserver = smtplib.SMTP(self.host , self.port)
+        # self.msg['To']= destinataire
+        # self.msg['Cc']      = cc
+        # self.msg['Bcc']     = bcc
+        # mailserver = smtplib.SMTP(self.host , self.port)
         try:
-            x=mailserver.sendmail(expediteur, destinataires_list, self.msg.as_string())
-            
+            expediteur= self.mail_expediteur
+            x=self.smtp.sendmail(expediteur, destinataire, self.msg.as_string())
+
             print(x)
         except smtplib.SMTPException as e:
             print(e)
             return False
-        mailserver.quit()
-        
+        self.smtp.quit()
+
 
 # nicolas.rollet@newtonexpertise.com
 # mathieu.leroy@newtonexpertise.com
@@ -105,44 +115,44 @@ class mail():
 
     # def set_mail_relance(self):
 
-# if __name__ == '__main__':
-#     set_mail=mail()
-#     data_exemple = {'total_relance': 1977.0,
-#                     'compte_client': '90000729',
-#                     'data_tableau': [{'niveau_relance': 3, 
-#                                     'date_fact': '14/02/2019',
-#                                     'num_fact': '0190211545',
-#                                     'echeance': '11/03/2019',
-#                                     'montantDebit': 431.4,
-#                                     'montantCredit': 0.0},
-#                                     {'niveau_relance': 3,
-#                                     'date_fact': '15/11/2016',
-#                                     'num_fact': '0161105903',
-#                                     'echeance': '10/12/2016',
-#                                     'montantDebit': 1692.0,
-#                                     'montantCredit': 0.0},
-#                                     {'niveau_relance': 1,
-#                                     'date_fact': '16/02/2017',
-#                                     'num_fact': '010',
-#                                     'echeance': '13/03/2017',
-#                                     'montantDebit': 0.0,
-#                                     'montantCredit': 2052.0},
-#                                     {'niveau_relance': 3,
-#                                     'date_fact': '16/04/2018',
-#                                     'num_fact': '0180409348',
-#                                     'echeance': '11/05/2018',
-#                                     'montantDebit': 1155.6,
-#                                     'montantCredit': 0.0},
-#                                     {'niveau_relance': 3,
-#                                     'date_fact': '18/11/2019',
-#                                     'num_fact': '0191113367',
-#                                     'echeance': '13/12/2019',
-#                                     'montantDebit': 750.0,
-#                                     'montantCredit': 0.0}
-#                                     ]}
+if __name__ == '__main__':
+    set_mail=mail()
+    data_exemple = {'total_relance': 1977.0,
+                    'compte_client': '90000729',
+                    'data_tableau': [{'niveau_relance': 3, 
+                                    'date_fact': '14/02/2019',
+                                    'num_fact': '0190211545',
+                                    'echeance': '11/03/2019',
+                                    'montantDebit': 431.4,
+                                    'montantCredit': 0.0},
+                                    {'niveau_relance': 3,
+                                    'date_fact': '15/11/2016',
+                                    'num_fact': '0161105903',
+                                    'echeance': '10/12/2016',
+                                    'montantDebit': 1692.0,
+                                    'montantCredit': 0.0},
+                                    {'niveau_relance': 1,
+                                    'date_fact': '16/02/2017',
+                                    'num_fact': '010',
+                                    'echeance': '13/03/2017',
+                                    'montantDebit': 0.0,
+                                    'montantCredit': 2052.0},
+                                    {'niveau_relance': 3,
+                                    'date_fact': '16/04/2018',
+                                    'num_fact': '0180409348',
+                                    'echeance': '11/05/2018',
+                                    'montantDebit': 1155.6,
+                                    'montantCredit': 0.0},
+                                    {'niveau_relance': 3,
+                                    'date_fact': '18/11/2019',
+                                    'num_fact': '0191113367',
+                                    'echeance': '13/12/2019',
+                                    'montantDebit': 750.0,
+                                    'montantCredit': 0.0}
+                                    ]}
 
     
-#     set_mail.render_template_html(data_exemple , 'block_mail.html')
-#     set_mail.render_basic_template('template_brut_ppl.txt')
-#     set_mail.piece_jointe(r'V:\Procédures','Instadoc.pdf')
-#     set_mail.send_mail('objet', 'mathieu.leroy@newtonexpertise.com', 'mathieu.leroy@newtonexpertise.com')
+    set_mail.render_template_html(data_exemple , 'template/block_mail.html')
+    set_mail.render_basic_template('template/template_brut_audit.txt')
+    set_mail.piece_jointe(r'V:\Procédures','Instadoc.pdf')
+    set_mail.send_mail('objet', 'mathieu.leroy@newtonexpertise.com','mathieu.leroy@newtonexpertise.com')
